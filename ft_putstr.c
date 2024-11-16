@@ -1,24 +1,28 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_putstr_fd.c                                     :+:      :+:    :+:   */
+/*   ft_putstr.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: mbousset <mbousset@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/27 12:09:17 by mbousset          #+#    #+#             */
-/*   Updated: 2024/11/14 17:12:13 by mbousset         ###   ########.fr       */
+/*   Updated: 2024/11/16 10:04:38 by mbousset         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_printf.h"
 
-void	ft_putstr_fd(char *s, int fd)
+int	ft_putstr(char *s)
 {
 	int	i;
 
 	i = 0;
-	if (fd < 0 || !s)
-		return ;
+	if (!s)
+		return (-1);
 	while (s[i] != '\0')
-		ft_putchar_fd(s[i++], fd);
+	{
+		if (ft_putchar(s[i++]) == -1)
+			return (-1);
+	}
+	return (0);
 }

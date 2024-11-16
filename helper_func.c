@@ -6,13 +6,13 @@
 /*   By: mbousset <mbousset@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/12 16:04:44 by mbousset          #+#    #+#             */
-/*   Updated: 2024/11/14 17:20:41 by mbousset         ###   ########.fr       */
+/*   Updated: 2024/11/16 11:06:39 by mbousset         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_printf.h"
 
-void	print_pad(int n, int zeropad)
+int	print_pad(int n, int zeropad)
 {
 	char	*pad;
 
@@ -21,37 +21,40 @@ void	print_pad(int n, int zeropad)
 		pad = "0";
 	while (n-- > 0)
 	{
-		write(1, pad, 1);
+		if (write(1, pad, 1) == -1)
+			return (-1);
 	}
-	return ;
+	return (0);
 }
 
-void	zero_cases_hex(unsigned long n, t_format flags, int f)
+int	handle_zero_hex(t_format flags, int f)
+{
+	int	width;
+
+	width = flags.width - flags.precision * !f - 1 * f;
+	if (!flags.minus && print_pad(width, flags.zero_padding) == -1)
+		return (-1);
+	if (print_pad(flags.precision, 1) == -1)
+		return (-1);
+	if (f && ft_putchar('0') == -1)
+		return (-1);
+	if (flags.minus && print_pad(width, flags.zero_padding) == -1)
+		return (-1);
+	return (0);
+}
+
+int	zero_cases_hex(unsigned long n, t_format flags, int f)
 {
 	int	width;
 
 	width = 0;
 	if (flags.hashtag && flags.zero_padding && n != 0)
-	{
-		write(1, "0", 1);
-		write(1, &flags.hex_char, 1);
-	}
+		if (ft_putchar('0') == -1 || ft_putchar(flags.hex_char) == -1)
+			return (-1);
 	if (n == 0)
-	{
-		if (!flags.minus)
-		{
-			width = flags.width - flags.precision * !f - 1 * f;
-			print_pad(width, flags.zero_padding);
-		}
-		print_pad(flags.precision, 1);
-		if (f)
-			write(1, "0", 1);
-		if (flags.minus)
-		{
-			width = flags.width - flags.precision * !f - 1 * f;
-			print_pad(width, flags.zero_padding);
-		}
-	}
+		if (handle_zero_hex(flags, f) == -1)
+			return (-1);
+	return (0);
 }
 
 int	handle_hex(char sep, va_list args, t_format flags)

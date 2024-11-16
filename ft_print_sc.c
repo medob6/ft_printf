@@ -6,7 +6,7 @@
 /*   By: mbousset <mbousset@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/13 20:29:35 by mbousset          #+#    #+#             */
-/*   Updated: 2024/11/14 18:43:07 by mbousset         ###   ########.fr       */
+/*   Updated: 2024/11/16 10:16:17 by mbousset         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,24 +20,28 @@ int	pad(int len, int zeropad)
 	if (zeropad)
 		pad = '0';
 	while (len--)
-		ft_putchar_fd(pad, 1);
+		ft_putchar(pad);
 	return (len);
 }
 
-void	print_str(char *str, int len)
+int	print_str(char *str, int len)
 {
 	int	j;
 
 	j = 0;
 	while (len--)
-		write(1, &str[j++], 1);
+	{
+		if (ft_putchar(str[j++]) == -1)
+			return (-1);
+	}
+	return (0);
 }
 
 int	print_c(char c, t_format flags)
 {
 	int		len;
 	char	s[2];
-	
+
 	s[0] = c;
 	if (c != '\0')
 		s[1] = '\0';
@@ -45,7 +49,7 @@ int	print_c(char c, t_format flags)
 	return (len);
 }
 
-int	print_s(char *s, t_format flags,int c_null)
+int	print_s(char *s, t_format flags, int c_null)
 {
 	int	len;
 	int	count;
@@ -61,7 +65,8 @@ int	print_s(char *s, t_format flags,int c_null)
 	count = len;
 	if (!flags.minus && flags.width > len)
 		count += pad(flags.width - len, flags.zero_padding);
-	print_str(s, len);
+	if (print_str(s, len) == -1)
+		return (-1);
 	if (flags.minus && flags.width > len)
 		count += pad(flags.width - len, 0);
 	return (count);
@@ -75,6 +80,6 @@ int	print_s_c(char p, va_list args, t_format flags)
 	if (p == 'c')
 		sum = print_c((char)va_arg(args, int), flags);
 	else
-		sum = print_s(va_arg(args, char *), flags,0);
+		sum = print_s(va_arg(args, char *), flags, 0);
 	return (sum);
 }

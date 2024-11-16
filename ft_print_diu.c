@@ -6,20 +6,30 @@
 /*   By: mbousset <mbousset@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/12 16:11:14 by mbousset          #+#    #+#             */
-/*   Updated: 2024/11/14 17:10:49 by mbousset         ###   ########.fr       */
+/*   Updated: 2024/11/16 10:26:32 by mbousset         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_printf.h"
 
-void	print_sign(int sign, t_format flags)
+int	print_sign(int sign, t_format flags)
 {
 	if (sign)
-		ft_putchar_fd('-', 1);
+	{
+		if (ft_putchar('-') == -1)
+			return (-1);
+	}
 	else if (flags.plus && !sign)
-		ft_putchar_fd('+', 1);
+	{
+		if (ft_putchar('+') == -1)
+			return (-1);
+	}
 	else if (flags.space && !sign)
-		ft_putchar_fd(' ', 1);
+	{
+		if (ft_putchar(' ') == -1)
+			return (-1);
+	}
+	return (0);
 }
 
 int	calc_width(t_format flags, int len, int sign)
@@ -28,22 +38,31 @@ int	calc_width(t_format flags, int len, int sign)
 		- (flags.precision > len) * (flags.precision - len));
 }
 
-void	before(t_format flags, int sign, int *len, int *count)
+int	before(t_format flags, int sign, int *len, int *count)
 {
 	if (flags.zero_padding)
-		print_sign(sign, flags);
+	{
+		if (print_sign(sign, flags) == -1)
+			return (-1);
+	}
 	if (!flags.minus && flags.width > *len && flags.width > flags.precision)
 	{
-		print_pad(calc_width(flags, *len, sign), flags.zero_padding);
+		if (print_pad(calc_width(flags, *len, sign), flags.zero_padding) == -1)
+			return (-1);
 		*count += calc_width(flags, *len, sign);
 	}
 	if (!flags.zero_padding)
-		print_sign(sign, flags);
+	{
+		if (print_sign(sign, flags) == -1)
+			return (-1);
+	}
 	while (*len < flags.precision)
 	{
-		ft_putchar_fd('0', 1);
+		if (ft_putchar('0') == -1)
+			return (-1);
 		(*len)++;
 	}
+	return (0);
 }
 
 int	ft_print_diu(long n, t_format flags)
@@ -57,18 +76,20 @@ int	ft_print_diu(long n, t_format flags)
 	count = (flags.space || flags.plus || sign);
 	res = ft_itoa(n * (-sign) + n * (!sign));
 	len = ft_strlen(res);
-	before(flags, sign, &len, &count);
+	if (before(flags, sign, &len, &count) == -1)
+		return (free(res), -1);
 	if (flags.precision == 0 && n == 0)
 	{
 		res = "";
 		count -= 1;
 	}
-	ft_putstr_fd(res, 1);
+	if (ft_putstr(res) == -1)
+		return (free(res), -1);
 	if (flags.minus && flags.width > len)
 	{
-		print_pad(calc_width(flags, len, sign), flags.zero_padding);
+		if (print_pad(calc_width(flags, len, sign), flags.zero_padding) == -1)
+			return (free(res), -1);
 		count += calc_width(flags, len, sign);
 	}
-	free(res);
-	return (count + len);
+	return (free(res), (count + len));
 }

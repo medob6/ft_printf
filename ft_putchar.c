@@ -1,20 +1,20 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_putchar_fd.c                                    :+:      :+:    :+:   */
+/*   ft_putchar.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: mbousset <mbousset@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/27 12:05:09 by mbousset          #+#    #+#             */
-/*   Updated: 2024/11/14 17:12:13 by mbousset         ###   ########.fr       */
+/*   Updated: 2024/11/15 15:55:56 by mbousset         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_printf.h"
 
-void	ft_putchar_fd(char c, int fd)
+int	ft_putchar(char c)
 {
-	if (fd < 0)
-		return ;
-	write(fd, &c, 1);
+	if (write(1, &c, 1) == -1)
+		return (-1);
+	return (0);
 }

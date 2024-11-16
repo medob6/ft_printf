@@ -6,7 +6,7 @@
 /*   By: mbousset <mbousset@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/26 20:56:29 by mbousset          #+#    #+#             */
-/*   Updated: 2024/11/14 17:12:13 by mbousset         ###   ########.fr       */
+/*   Updated: 2024/11/15 16:13:28 by mbousset         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,10 +54,10 @@ char	*ft_itoa(long n)
 	sign = (n < 0);
 	i = 0;
 	res = malloc((count_digit(n) + (n < 0) + 1) * sizeof(char));
-	if (sign)
-		n = -n;
 	if (!res)
 		return (NULL);
+	if (sign)
+		n = -n;
 	if (n == 0)
 		res[i++] = '0';
 	while (n > 0)
