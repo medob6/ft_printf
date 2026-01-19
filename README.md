@@ -519,7 +519,7 @@ This project is part of the 42 School curriculum.
 **medob6**
 
 - GitHub: [@medob6](https://github.com/medob6)
-- 42 Intra: `medob6`
+- 42 Intra: `mbousset`
 
 ---
 
